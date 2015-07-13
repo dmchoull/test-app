@@ -41,6 +41,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'devise'
 
+gem 'rolify'
+
 # Use Puma as the app server
 gem 'puma'
 
@@ -49,6 +51,7 @@ gem 'puma'
 
 group :test do
   gem 'sqlite3'
+  gem 'shoulda-matchers', require: false
   gem 'rspec-rails'
   gem 'factory_girl_rails'
 end
