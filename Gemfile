@@ -59,6 +59,7 @@ group :development do
   gem 'terminal-notifier'
   gem 'terminal-notifier-guard'
   gem 'rb-readline'
+  gem 'fuubar'
   gem 'spring'
   gem 'spring-commands-rspec'
 end
