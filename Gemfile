@@ -50,6 +50,7 @@ gem 'puma'
 group :test do
   gem 'sqlite3'
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
 end
 
 group :development do
