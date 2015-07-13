@@ -7,13 +7,19 @@
     <%= csrf_meta_tags %>
 </head>
 <body>
-<div id="wrapper">
-    <%= render partial: 'shared/navigation' %>
 
-    <div id="page-wrapper">
-        <%= render partial: 'shared/alerts' %>
-        <%= yield %>
+<% if user_signed_in? %>
+    <div id="wrapper">
+        <%= render partial: 'shared/navigation' %>
+
+        <div id="page-wrapper">
+            <%= render partial: 'shared/alerts' %>
+            <%= yield %>
+        </div>
     </div>
-</div>
+<% else %>
+    <%= render partial: 'shared/alerts' %>
+    <%= yield %>
+<% end %>
 </body>
 </html>
