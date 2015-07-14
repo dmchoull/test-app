@@ -5,4 +5,6 @@ Rails.application.routes.draw do
     root 'devise/sessions#new'
     get '/welcome', to: 'welcome#index', as: :user_root
   end
+
+  resources :profiles
 end
