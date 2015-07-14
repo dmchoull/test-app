@@ -49,6 +49,8 @@ gem 'puma'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'awesome_print'
+
 group :test do
   gem 'sqlite3'
   gem 'shoulda-matchers', require: false
