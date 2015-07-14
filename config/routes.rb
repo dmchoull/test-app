@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     root 'devise/sessions#new'
-    get '/welcome', to: 'welcome#index', as: :user_root
+    get '/profiles', to: 'profiles#index', as: :user_root
   end
 
   resources :profiles
