@@ -64,7 +64,6 @@ group :development do
   gem 'terminal-notifier'
   gem 'terminal-notifier-guard'
   gem 'rb-readline'
-  gem 'fuubar'
   gem 'spring'
   gem 'spring-commands-rspec'
 end
@@ -75,6 +74,8 @@ group :development, :test do
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
+
+  gem 'fuubar'
 end
 
 group :production do
