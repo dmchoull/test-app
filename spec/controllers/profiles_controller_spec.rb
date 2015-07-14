@@ -1,4 +1,6 @@
 describe ProfilesController, type: :controller do
+  login_user(:user_without_profile)
+
   let(:valid_attributes) {
     attributes_for(:profile)
   }
@@ -12,6 +14,28 @@ describe ProfilesController, type: :controller do
       profile = create(:profile, valid_attributes)
       get :index, {}
       expect(assigns(:profiles)).to eq([profile])
+    end
+  end
+
+  describe 'GET #profile' do
+    context 'current user has a profile' do
+      it 'assigns the current user`s profile as @profile' do
+        profile = create(:profile, user: @current_user)
+        get :profile, {}
+        expect(assigns(:profile)).to eq(profile)
+      end
+    end
+
+    context 'current user does not have a profile' do
+      it 'assigns a new profile as @profile' do
+        get :profile, {}
+        expect(assigns(:profile)).to be_a_new(Profile)
+      end
+
+      it 'renders the new profile template' do
+        get :profile, {}
+        expect(response).to render_template('new')
+      end
     end
   end
 
@@ -55,6 +79,12 @@ describe ProfilesController, type: :controller do
       it 'redirects to the created profile' do
         post :create, {profile: valid_attributes}
         expect(response).to redirect_to(Profile.last)
+      end
+
+      it 'associates the new profile with the current user' do
+        post :create, {profile: valid_attributes}
+        @current_user.reload
+        expect(@current_user.profile).to eq(Profile.last)
       end
     end
 

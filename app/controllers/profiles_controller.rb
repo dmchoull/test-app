@@ -1,8 +1,19 @@
 class ProfilesController < ApplicationController
+  layout 'admin'
+  before_action :authenticate_user!
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
 
   def index
     @profiles = Profile.all
+  end
+
+  def profile
+    if current_user.profile
+      @profile = current_user.profile
+    else
+      @profile = Profile.new
+      render :new
+    end
   end
 
   def show
@@ -45,6 +56,6 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:name, :bio)
+    params.require(:profile).permit(:name, :bio).merge(user_id: current_user.id)
   end
 end
