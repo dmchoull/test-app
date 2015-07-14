@@ -6,5 +6,9 @@ Rails.application.routes.draw do
     get '/profile', to: 'profiles#profile', as: :user_root
   end
 
-  resources :profiles
+  resources :users, only: [] do
+    resource :profile
+  end
+
+  get '/profiles', to: 'profiles#index', as: :profiles_path
 end

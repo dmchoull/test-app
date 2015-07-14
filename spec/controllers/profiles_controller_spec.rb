@@ -1,5 +1,5 @@
 describe ProfilesController, type: :controller do
-  login_user(:user_without_profile)
+  login_user
 
   let(:valid_attributes) {
     attributes_for(:profile)
@@ -42,14 +42,14 @@ describe ProfilesController, type: :controller do
   describe 'GET #show' do
     it 'assigns the requested profile as @profile' do
       profile = create(:profile, valid_attributes)
-      get :show, {id: profile.to_param}
+      get :show, {user_id: profile.user.to_param}
       expect(assigns(:profile)).to eq(profile)
     end
   end
 
   describe 'GET #new' do
     it 'assigns a new profile as @profile' do
-      get :new, {}
+      get :new, {user_id: @current_user.to_param}
       expect(assigns(:profile)).to be_a_new(Profile)
     end
   end
@@ -57,7 +57,7 @@ describe ProfilesController, type: :controller do
   describe 'GET #edit' do
     it 'assigns the requested profile as @profile' do
       profile = create(:profile, valid_attributes)
-      get :edit, {id: profile.to_param}
+      get :edit, {user_id: profile.user.to_param}
       expect(assigns(:profile)).to eq(profile)
     end
   end
@@ -66,23 +66,23 @@ describe ProfilesController, type: :controller do
     context 'with valid params' do
       it 'creates a new Profile' do
         expect {
-          post :create, {profile: valid_attributes}
+          post :create, {user_id: @current_user.to_param, profile: valid_attributes}
         }.to change(Profile, :count).by(1)
       end
 
       it 'assigns a newly created profile as @profile' do
-        post :create, {profile: valid_attributes}
+        post :create, {user_id: @current_user.to_param, profile: valid_attributes}
         expect(assigns(:profile)).to be_a(Profile)
         expect(assigns(:profile)).to be_persisted
       end
 
       it 'redirects to the created profile' do
-        post :create, {profile: valid_attributes}
-        expect(response).to redirect_to(Profile.last)
+        post :create, {user_id: @current_user.to_param, profile: valid_attributes}
+        expect(response).to redirect_to([@current_user, Profile.last])
       end
 
       it 'associates the new profile with the current user' do
-        post :create, {profile: valid_attributes}
+        post :create, {user_id: @current_user.to_param, profile: valid_attributes}
         @current_user.reload
         expect(@current_user.profile).to eq(Profile.last)
       end
@@ -90,12 +90,12 @@ describe ProfilesController, type: :controller do
 
     context 'with invalid params' do
       it 'assigns a newly created but unsaved profile as @profile' do
-        post :create, {profile: invalid_attributes}
+        post :create, {user_id: @current_user.to_param, profile: invalid_attributes}
         expect(assigns(:profile)).to be_a_new(Profile)
       end
 
       it 're-renders the "new" template' do
-        post :create, {profile: invalid_attributes}
+        post :create, {user_id: @current_user.to_param, profile: invalid_attributes}
         expect(response).to render_template('new')
       end
     end
@@ -109,34 +109,34 @@ describe ProfilesController, type: :controller do
 
       it 'updates the requested profile' do
         profile = create(:profile, valid_attributes)
-        put :update, {id: profile.to_param, profile: new_attributes}
+        put :update, {user_id: profile.user.to_param, profile: new_attributes}
         profile.reload
         expect(profile.bio).to eq(new_attributes[:bio])
       end
 
       it 'assigns the requested profile as @profile' do
         profile = create(:profile, valid_attributes)
-        put :update, {id: profile.to_param, profile: valid_attributes}
+        put :update, {user_id: profile.user.to_param, profile: valid_attributes}
         expect(assigns(:profile)).to eq(profile)
       end
 
       it 'redirects to the profile' do
         profile = create(:profile, valid_attributes)
-        put :update, {id: profile.to_param, profile: valid_attributes}
-        expect(response).to redirect_to(profile)
+        put :update, {user_id: profile.user.to_param, profile: valid_attributes}
+        expect(response).to redirect_to([@current_user, profile])
       end
     end
 
     context 'with invalid params' do
       it 'assigns the profile as @profile' do
         profile = create(:profile, valid_attributes)
-        put :update, {id: profile.to_param, profile: invalid_attributes}
+        put :update, {user_id: profile.user.to_param, profile: invalid_attributes}
         expect(assigns(:profile)).to eq(profile)
       end
 
       it 're-renders the "edit" template' do
         profile = create(:profile, valid_attributes)
-        put :update, {id: profile.to_param, profile: invalid_attributes}
+        put :update, {user_id: profile.user.to_param, profile: invalid_attributes}
         expect(response).to render_template('edit')
       end
     end
@@ -146,14 +146,14 @@ describe ProfilesController, type: :controller do
     it 'destroys the requested profile' do
       profile = create(:profile, valid_attributes)
       expect {
-        delete :destroy, {id: profile.to_param}
+        delete :destroy, {user_id: profile.user.to_param}
       }.to change(Profile, :count).by(-1)
     end
 
     it 'redirects to the profiles list' do
       profile = create(:profile, valid_attributes)
-      delete :destroy, {id: profile.to_param}
-      expect(response).to redirect_to(profiles_url)
+      delete :destroy, {user_id: profile.user.to_param}
+      expect(response).to redirect_to(user_root_path)
     end
   end
 end

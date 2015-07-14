@@ -15,15 +15,11 @@
             <tr>
                 <td><%= profile.name %></td>
                 <td><%= profile.bio %></td>
-                <td><%= link_to 'Show', profile %></td>
-                <td><%= link_to 'Edit', edit_profile_path(profile) %></td>
-                <td><%= link_to 'Destroy', profile, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+                <td><%= link_to 'Show', [current_user, profile] %></td>
+                <td><%= link_to 'Edit', edit_user_profile_path(current_user) %></td>
+                <td><%= link_to 'Destroy', [current_user, profile], method: :delete, data: {confirm: 'Are you sure?'} %></td>
             </tr>
         <% end %>
         </tbody>
     </table>
-
-    <br>
-    
-    <%= link_to 'New profile', new_profile_path %>
 </div>
