@@ -3,8 +3,9 @@ class ProfilesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
 
+  load_and_authorize_resource only: [:index]
+
   def index
-    @profiles = Profile.all
   end
 
   def profile

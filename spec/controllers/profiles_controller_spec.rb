@@ -10,10 +10,24 @@ describe ProfilesController, type: :controller do
   }
 
   describe 'GET #index' do
-    it 'assigns all profiles as @profiles' do
-      profile = create(:profile, valid_attributes)
-      get :index, {}
-      expect(assigns(:profiles)).to eq([profile])
+    context 'admin user' do
+      before do
+        @current_user.add_role :admin
+      end
+
+      it 'assigns all profiles as @profiles' do
+        profile = create(:profile, valid_attributes)
+        get :index, {}
+        expect(assigns(:profiles)).to eq([profile])
+      end
+    end
+
+    context 'regular user' do
+      it 'raises a security exception' do
+        create(:profile, valid_attributes)
+        get :index, {}
+        expect(assigns(:profiles)).to eq([])
+      end
     end
   end
 
