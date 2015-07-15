@@ -1,24 +1,26 @@
 <div class="row">
-    <h1>Listing Profiles</h1>
+    <div class="col-xs-12">
+        <h2>Profiles</h2>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Bio</th>
-            <th colspan="3"></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <% @profiles.each do |profile| %>
+        <table class="table table-hover">
+            <thead>
             <tr>
-                <td><%= profile.name %></td>
-                <td><%= profile.bio %></td>
-                <td><%= link_to 'View', [current_user, profile] %></td>
-                <td><%= link_to 'Destroy', [current_user, profile], method: :delete, data: {confirm: 'Are you sure?'} %></td>
+                <th>Name</th>
+                <th>Bio</th>
+                <th colspan="2"></th>
             </tr>
-        <% end %>
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+            <% @profiles.each do |profile| %>
+                <tr>
+                    <td><%= profile.name %></td>
+                    <td><%= profile.bio %></td>
+                    <td><%= link_to 'View', [profile.user, profile] %></td>
+                    <td><%= link_to 'Delete', [profile.user, profile], method: :delete, data: {confirm: 'Are you sure?'} %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
 </div>

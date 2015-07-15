@@ -20,7 +20,7 @@
             <ul class="dropdown-menu dropdown-user">
                 <% if user_signed_in? %>
                     <%= link_to edit_user_registration_path do %>
-                        <i class="fa fa-user fa-fw"></i> Edit Profile
+                        <i class="fa fa-gear fa-fw"></i> Account Settings
                     <% end %>
                     <li class="divider"></li>
                     <%= link_to destroy_user_session_path, method: :delete do %>
