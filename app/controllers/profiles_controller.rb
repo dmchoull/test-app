@@ -4,7 +4,7 @@ class ProfilesController < ApplicationController
   before_action :set_profile, only: [:show, :update, :destroy]
 
   load_resource only: [:index]
-  authorize_resource through: :current_user, singleton: true, only: [:show]
+  authorize_resource through: :current_user, singleton: true, except: [:index]
 
   def index
     authorize! current_user, @profiles

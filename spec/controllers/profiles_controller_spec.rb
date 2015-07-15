@@ -120,26 +120,23 @@ describe ProfilesController, type: :controller do
   end
 
   describe 'PUT #update' do
+    let(:profile) { create(:profile, valid_attributes.merge(user: @current_user)) }
+
     context 'with valid params' do
-      let(:new_attributes) {
-        attributes_for(:profile, bio: 'updated bio')
-      }
+      let(:new_attributes) { attributes_for(:profile, bio: 'updated bio') }
 
       it 'updates the requested profile' do
-        profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: new_attributes}
         profile.reload
         expect(profile.bio).to eq(new_attributes[:bio])
       end
 
       it 'assigns the requested profile as @profile' do
-        profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: valid_attributes}
         expect(assigns(:profile)).to eq(profile)
       end
 
       it 'redirects to the profile' do
-        profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: valid_attributes}
         expect(response).to redirect_to(user_root_path)
       end
@@ -147,31 +144,66 @@ describe ProfilesController, type: :controller do
 
     context 'with invalid params' do
       it 'assigns the profile as @profile' do
-        profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: invalid_attributes}
         expect(assigns(:profile)).to eq(profile)
       end
 
       it 're-renders the "profile" template' do
-        profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: invalid_attributes}
         expect(response).to render_template('profile')
+      end
+    end
+
+    context 'with another user`s profile' do
+      let(:profile) { create(:profile, valid_attributes) }
+
+      context 'as a regular user' do
+        it 'raises an error' do
+          expect { put :update, {user_id: profile.user.to_param, profile: valid_attributes} }.to raise_error CanCan::AccessDenied
+        end
+      end
+
+      context 'as an admin user' do
+        before { @current_user.add_role :admin }
+
+        it 'does not raise an error' do
+          expect { put :update, {user_id: profile.user.to_param, profile: valid_attributes} }.not_to raise_error
+        end
       end
     end
   end
 
   describe 'DELETE #destroy' do
+    let(:profile) { create(:profile, valid_attributes.merge(user: @current_user)) }
+
     it 'destroys the requested profile' do
-      profile = create(:profile, valid_attributes)
+      profile
       expect {
         delete :destroy, {user_id: profile.user.to_param}
       }.to change(Profile, :count).by(-1)
     end
 
     it 'redirects to the profiles list' do
-      profile = create(:profile, valid_attributes)
       delete :destroy, {user_id: profile.user.to_param}
       expect(response).to redirect_to(user_root_path)
+    end
+
+    context 'with another user`s profile' do
+      let(:profile) { create(:profile, valid_attributes) }
+
+      context 'as a regular user' do
+        it 'raises an error' do
+          expect { delete :destroy, {user_id: profile.user.to_param} }.to raise_error CanCan::AccessDenied
+        end
+      end
+
+      context 'as an admin user' do
+        before { @current_user.add_role :admin }
+
+        it 'does not raise an error' do
+          expect { delete :destroy, {user_id: profile.user.to_param} }.not_to raise_error
+        end
+      end
     end
   end
 end
