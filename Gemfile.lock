@@ -267,6 +267,7 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   pg
+  pry
   puma
   rails (= 4.2.3)
   rails_12factor
