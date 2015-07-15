@@ -1,16 +1,8 @@
 describe ProfilesController, type: :routing do
   describe 'routing' do
 
-    it 'routes to #new' do
-      expect(get: '/users/1/profile/new').to route_to('profiles#new', user_id: '1')
-    end
-
     it 'routes to #show' do
       expect(get: '/users/1/profile').to route_to('profiles#show', user_id: '1')
-    end
-
-    it 'routes to #edit' do
-      expect(get: '/users/1/profile/edit').to route_to('profiles#edit', user_id: '1')
     end
 
     it 'routes to #create' do

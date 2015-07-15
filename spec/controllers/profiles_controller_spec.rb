@@ -11,9 +11,7 @@ describe ProfilesController, type: :controller do
 
   describe 'GET #index' do
     context 'admin user' do
-      before do
-        @current_user.add_role :admin
-      end
+      before { @current_user.add_role :admin }
 
       it 'assigns all profiles as @profiles' do
         profile = create(:profile, valid_attributes)
@@ -25,8 +23,7 @@ describe ProfilesController, type: :controller do
     context 'regular user' do
       it 'raises a security exception' do
         create(:profile, valid_attributes)
-        get :index, {}
-        expect(assigns(:profiles)).to eq([])
+        expect { get :index, {} }.to raise_error CanCan::AccessDenied
       end
     end
   end
@@ -45,34 +42,41 @@ describe ProfilesController, type: :controller do
         get :profile, {}
         expect(assigns(:profile)).to be_a_new(Profile)
       end
-
-      it 'renders the new profile template' do
-        get :profile, {}
-        expect(response).to render_template('new')
-      end
     end
   end
 
   describe 'GET #show' do
-    it 'assigns the requested profile as @profile' do
-      profile = create(:profile, valid_attributes)
+    it 'renders the "profile" template' do
+      profile = create(:profile, valid_attributes.merge(user: @current_user))
       get :show, {user_id: profile.user.to_param}
-      expect(assigns(:profile)).to eq(profile)
+      expect(response).to render_template('profile')
     end
-  end
 
-  describe 'GET #new' do
-    it 'assigns a new profile as @profile' do
-      get :new, {user_id: @current_user.to_param}
-      expect(assigns(:profile)).to be_a_new(Profile)
+    context 'admin user' do
+      before { @current_user.add_role :admin }
+
+      it 'assigns the requested profile as @profile' do
+        profile = create(:profile, valid_attributes)
+        get :show, {user_id: profile.user.to_param}
+        expect(assigns(:profile)).to eq(profile)
+      end
     end
-  end
 
-  describe 'GET #edit' do
-    it 'assigns the requested profile as @profile' do
-      profile = create(:profile, valid_attributes)
-      get :edit, {user_id: profile.user.to_param}
-      expect(assigns(:profile)).to eq(profile)
+    context 'regular user' do
+      context 'own profile' do
+        it 'assigns the requested profile as @profile' do
+          profile = create(:profile, valid_attributes.merge(user: @current_user))
+          get :show, {user_id: profile.user.to_param}
+          expect(assigns(:profile)).to eq(profile)
+        end
+      end
+
+      context 'other profile' do
+        it 'raises an error' do
+          profile = create(:profile, valid_attributes)
+          expect { get :show, {user_id: profile.user.to_param} }.to raise_error CanCan::AccessDenied
+        end
+      end
     end
   end
 
@@ -92,7 +96,7 @@ describe ProfilesController, type: :controller do
 
       it 'redirects to the created profile' do
         post :create, {user_id: @current_user.to_param, profile: valid_attributes}
-        expect(response).to redirect_to([@current_user, Profile.last])
+        expect(response).to redirect_to(user_root_path)
       end
 
       it 'associates the new profile with the current user' do
@@ -110,7 +114,7 @@ describe ProfilesController, type: :controller do
 
       it 're-renders the "new" template' do
         post :create, {user_id: @current_user.to_param, profile: invalid_attributes}
-        expect(response).to render_template('new')
+        expect(response).to render_template('profile')
       end
     end
   end
@@ -137,7 +141,7 @@ describe ProfilesController, type: :controller do
       it 'redirects to the profile' do
         profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: valid_attributes}
-        expect(response).to redirect_to([@current_user, profile])
+        expect(response).to redirect_to(user_root_path)
       end
     end
 
@@ -148,10 +152,10 @@ describe ProfilesController, type: :controller do
         expect(assigns(:profile)).to eq(profile)
       end
 
-      it 're-renders the "edit" template' do
+      it 're-renders the "profile" template' do
         profile = create(:profile, valid_attributes)
         put :update, {user_id: profile.user.to_param, profile: invalid_attributes}
-        expect(response).to render_template('edit')
+        expect(response).to render_template('profile')
       end
     end
   end

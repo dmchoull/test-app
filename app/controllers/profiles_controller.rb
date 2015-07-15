@@ -1,47 +1,38 @@
 class ProfilesController < ApplicationController
   layout 'admin'
   before_action :authenticate_user!
-  before_action :set_profile, only: [:show, :edit, :update, :destroy]
+  before_action :set_profile, only: [:show, :update, :destroy]
 
-  load_and_authorize_resource only: [:index]
+  load_resource only: [:index]
+  authorize_resource through: :current_user, singleton: true, only: [:show]
 
   def index
-  end
-
-  def profile
-    if current_user.profile
-      @profile = current_user.profile
-    else
-      @profile = Profile.new
-      render :new
-    end
+    authorize! current_user, @profiles
   end
 
   def show
+    render :profile
   end
 
-  def new
-    @profile = Profile.new
-  end
-
-  def edit
+  def profile
+    @profile = current_user.profile || Profile.new
   end
 
   def create
     @profile = Profile.new(profile_params)
 
     if @profile.save
-      redirect_to [current_user, @profile], notice: 'Profile was successfully created.'
+      redirect_to user_root_path, notice: 'Profile was successfully created.'
     else
-      render :new
+      render :profile
     end
   end
 
   def update
     if @profile.update(profile_params)
-      redirect_to [current_user, @profile], notice: 'Profile was successfully updated.'
+      redirect_to user_root_path, notice: 'Profile was successfully updated.'
     else
-      render :edit
+      render :profile
     end
   end
 

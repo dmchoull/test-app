@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [] do
-    resource :profile
+    resource :profile, only: [:create, :show, :update, :destroy]
   end
 
   get '/profiles', to: 'profiles#index', as: :profiles
