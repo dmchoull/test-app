@@ -10,5 +10,5 @@ Rails.application.routes.draw do
     resource :profile
   end
 
-  get '/profiles', to: 'profiles#index', as: :profiles_path
+  get '/profiles', to: 'profiles#index', as: :profiles
 end
