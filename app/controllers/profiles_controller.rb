@@ -15,7 +15,7 @@ class ProfilesController < ApplicationController
   end
 
   def profile
-    @profile = current_user.profile || Profile.new
+    @profile = current_user.profile || Profile.new(user: current_user)
   end
 
   def create
@@ -30,7 +30,7 @@ class ProfilesController < ApplicationController
 
   def update
     if @profile.update(profile_params)
-      redirect_to user_root_path, notice: 'Profile was successfully updated.'
+      redirect_to user_profile_path(@profile.user, @profile), notice: 'Profile was successfully updated.'
     else
       render :profile
     end
@@ -48,6 +48,6 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:name, :bio).merge(user_id: current_user.id)
+    params.require(:profile).permit(:name, :bio).merge(params.permit(:user_id))
   end
 end

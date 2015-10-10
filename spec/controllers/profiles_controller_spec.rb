@@ -1,13 +1,9 @@
 describe ProfilesController, type: :controller do
   login_user
 
-  let(:valid_attributes) {
-    attributes_for(:profile)
-  }
+  let(:valid_attributes) { attributes_for(:profile) }
 
-  let(:invalid_attributes) {
-    attributes_for(:profile, name: nil)
-  }
+  let(:invalid_attributes) { attributes_for(:profile, name: nil) }
 
   describe 'GET #index' do
     context 'admin user' do
@@ -138,7 +134,7 @@ describe ProfilesController, type: :controller do
 
       it 'redirects to the profile' do
         put :update, {user_id: profile.user.to_param, profile: valid_attributes}
-        expect(response).to redirect_to(user_root_path)
+        expect(response).to redirect_to(user_profile_path(profile.user, profile))
       end
     end
 
@@ -164,10 +160,14 @@ describe ProfilesController, type: :controller do
       end
 
       context 'as an admin user' do
-        before { @current_user.add_role :admin }
+        before do
+          create(:profile, valid_attributes.merge(user_id: @current_user.id))
+          @current_user.add_role :admin
+        end
 
-        it 'does not raise an error' do
-          expect { put :update, {user_id: profile.user.to_param, profile: valid_attributes} }.not_to raise_error
+        it 'does not raise an error and updates the user`s bio' do
+          expect { put :update, {user_id: profile.user.to_param, profile: valid_attributes.merge(bio: 'updated')} }.not_to raise_error
+          expect(profile.reload.bio).to eq('updated')
         end
       end
     end
