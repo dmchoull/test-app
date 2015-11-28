@@ -55,7 +55,6 @@ group :test do
   gem 'sqlite3'
   gem 'shoulda-matchers', require: false
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
 end
 
 group :development do
@@ -76,8 +75,8 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
 
   gem 'fuubar'
-
   gem 'pry'
+  gem 'factory_girl_rails'
 end
 
 group :production do
