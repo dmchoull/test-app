@@ -15,7 +15,7 @@
             <% @profiles.each do |profile| %>
                 <tr>
                     <td><%= profile.name %></td>
-                    <td><%= profile.bio %></td>
+                    <td><%= profile.bio.truncate(200) %></td>
                     <td><%= link_to 'View', [profile.user, profile] %></td>
                     <td><%= link_to 'Delete', [profile.user, profile], method: :delete, data: {confirm: 'Are you sure?'} %></td>
                 </tr>
