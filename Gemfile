@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.3'
 
 # Use PostgreSQL as the database for Active Record
-gem 'pg', group: [:development, :production]
+gem 'pg'
 
 # Use Bootstrap framework
 gem 'bootstrap-sass'
@@ -52,7 +52,6 @@ gem 'rolify'
 gem 'awesome_print'
 
 group :test do
-  gem 'sqlite3'
   gem 'shoulda-matchers', require: false
   gem 'rspec-rails'
 end
