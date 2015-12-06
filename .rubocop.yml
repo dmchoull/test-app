@@ -23,7 +23,3 @@ Style/SpaceInsideHashLiteralBraces:
 RSpec/FilePath:
   Exclude:
     - 'spec/routing/**/*'
-
-RSpec/Focused:
-  Enabled: true
-  Severity: warning

@@ -58,7 +58,7 @@ end
 
 group :development do
   gem 'guard-rspec'
-  gem 'guard-shell'
+  gem 'guard-rubocop'
   gem 'terminal-notifier'
   gem 'terminal-notifier-guard'
   gem 'rb-readline'
