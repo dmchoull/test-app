@@ -54,6 +54,8 @@ gem 'awesome_print'
 group :test do
   gem 'shoulda-matchers', require: false
   gem 'rspec-rails'
+  gem 'capybara'
+  gem 'launchy'
 end
 
 group :development do
