@@ -1,3 +1,7 @@
+require:
+  - rubocop-rspec
+  - rubocop/rspec/focused
+
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -15,3 +19,11 @@ Metrics/LineLength:
 
 Style/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
+
+RSpec/FilePath:
+  Exclude:
+    - 'spec/routing/**/*'
+
+RSpec/Focused:
+  Enabled: true
+  Severity: warning

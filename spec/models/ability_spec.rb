@@ -3,7 +3,7 @@ describe Ability, type: :model do
   let(:user) { build_stubbed(:user) }
 
   context 'admin user' do
-    subject(:ability) { Ability.new(admin) }
+    subject(:ability) { described_class.new(admin) }
     let(:own_profile) { build_stubbed(:profile, user: admin) }
     let(:other_profile) { build_stubbed(:profile, user: user) }
 
@@ -13,7 +13,7 @@ describe Ability, type: :model do
   end
 
   context 'regular user' do
-    subject(:ability) { Ability.new(user) }
+    subject(:ability) { described_class.new(user) }
     let(:own_profile) { build_stubbed(:profile, user: user) }
     let(:other_profile) { build_stubbed(:profile) }
 

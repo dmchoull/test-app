@@ -7,7 +7,7 @@ describe ProfilesController, type: :controller do
 
   describe 'GET #index' do
     context 'admin user' do
-      before { @current_user.add_role :admin }
+      before { current_user.add_role :admin }
 
       it 'assigns all profiles as @profiles' do
         profile = create(:profile, valid_attributes)
@@ -27,7 +27,7 @@ describe ProfilesController, type: :controller do
   describe 'GET #profile' do
     context 'current user has a profile' do
       it 'assigns the current user`s profile as @profile' do
-        profile = create(:profile, user: @current_user)
+        profile = create(:profile, user: current_user)
         get :profile, {}
         expect(assigns(:profile)).to eq(profile)
       end
@@ -43,13 +43,13 @@ describe ProfilesController, type: :controller do
 
   describe 'GET #show' do
     it 'renders the "profile" template' do
-      profile = create(:profile, valid_attributes.merge(user: @current_user))
+      profile = create(:profile, valid_attributes.merge(user: current_user))
       get :show, user_id: profile.user.to_param
       expect(response).to render_template('profile')
     end
 
     context 'admin user' do
-      before { @current_user.add_role :admin }
+      before { current_user.add_role :admin }
 
       it 'assigns the requested profile as @profile' do
         profile = create(:profile, valid_attributes)
@@ -61,7 +61,7 @@ describe ProfilesController, type: :controller do
     context 'regular user' do
       context 'own profile' do
         it 'assigns the requested profile as @profile' do
-          profile = create(:profile, valid_attributes.merge(user: @current_user))
+          profile = create(:profile, valid_attributes.merge(user: current_user))
           get :show, user_id: profile.user.to_param
           expect(assigns(:profile)).to eq(profile)
         end
@@ -80,43 +80,43 @@ describe ProfilesController, type: :controller do
     context 'with valid params' do
       it 'creates a new Profile' do
         expect do
-          post :create, user_id: @current_user.to_param, profile: valid_attributes
+          post :create, user_id: current_user.to_param, profile: valid_attributes
         end.to change(Profile, :count).by(1)
       end
 
       it 'assigns a newly created profile as @profile' do
-        post :create, user_id: @current_user.to_param, profile: valid_attributes
+        post :create, user_id: current_user.to_param, profile: valid_attributes
         expect(assigns(:profile)).to be_a(Profile)
         expect(assigns(:profile)).to be_persisted
       end
 
       it 'redirects to the created profile' do
-        post :create, user_id: @current_user.to_param, profile: valid_attributes
+        post :create, user_id: current_user.to_param, profile: valid_attributes
         expect(response).to redirect_to(user_root_path)
       end
 
       it 'associates the new profile with the current user' do
-        post :create, user_id: @current_user.to_param, profile: valid_attributes
-        @current_user.reload
-        expect(@current_user.profile).to eq(Profile.last)
+        post :create, user_id: current_user.to_param, profile: valid_attributes
+        current_user.reload
+        expect(current_user.profile).to eq(Profile.last)
       end
     end
 
     context 'with invalid params' do
       it 'assigns a newly created but unsaved profile as @profile' do
-        post :create, user_id: @current_user.to_param, profile: invalid_attributes
+        post :create, user_id: current_user.to_param, profile: invalid_attributes
         expect(assigns(:profile)).to be_a_new(Profile)
       end
 
       it 're-renders the "new" template' do
-        post :create, user_id: @current_user.to_param, profile: invalid_attributes
+        post :create, user_id: current_user.to_param, profile: invalid_attributes
         expect(response).to render_template('profile')
       end
     end
   end
 
   describe 'PUT #update' do
-    let(:profile) { create(:profile, valid_attributes.merge(user: @current_user)) }
+    let(:profile) { create(:profile, valid_attributes.merge(user: current_user)) }
 
     context 'with valid params' do
       let(:new_attributes) { attributes_for(:profile, bio: 'updated bio') }
@@ -163,8 +163,8 @@ describe ProfilesController, type: :controller do
 
       context 'as an admin user' do
         before do
-          create(:profile, valid_attributes.merge(user_id: @current_user.id))
-          @current_user.add_role :admin
+          create(:profile, valid_attributes.merge(user_id: current_user.id))
+          current_user.add_role :admin
         end
 
         it 'does not raise an error and updates the user`s bio' do
@@ -179,7 +179,7 @@ describe ProfilesController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:profile) { create(:profile, valid_attributes.merge(user: @current_user)) }
+    let(:profile) { create(:profile, valid_attributes.merge(user: current_user)) }
 
     it 'destroys the requested profile' do
       profile
@@ -203,7 +203,7 @@ describe ProfilesController, type: :controller do
       end
 
       context 'as an admin user' do
-        before { @current_user.add_role :admin }
+        before { current_user.add_role :admin }
 
         it 'does not raise an error' do
           expect { delete :destroy, user_id: profile.user.to_param }.not_to raise_error

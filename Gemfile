@@ -62,9 +62,13 @@ group :development do
   gem 'terminal-notifier'
   gem 'terminal-notifier-guard'
   gem 'rb-readline'
+
   gem 'spring'
   gem 'spring-commands-rspec'
+
   gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec-focused', require: false
 end
 
 group :development, :test do
