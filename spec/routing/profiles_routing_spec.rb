@@ -1,6 +1,5 @@
 describe ProfilesController, type: :routing do
   describe 'routing' do
-
     it 'routes to #show' do
       expect(get: '/users/1/profile').to route_to('profiles#show', user_id: '1')
     end
@@ -20,6 +19,5 @@ describe ProfilesController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/users/1/profile').to route_to('profiles#destroy', user_id: '1')
     end
-
   end
 end

@@ -64,6 +64,7 @@ group :development do
   gem 'rb-readline'
   gem 'spring'
   gem 'spring-commands-rspec'
+  gem 'rubocop', require: false
 end
 
 group :development, :test do
