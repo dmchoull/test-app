@@ -32,4 +32,18 @@ feature 'Profile page' do
       profile_page.expect_profile_updated(user.profile)
     end
   end
+
+  feature 'viewing another user`s profile' do
+    given(:user) { create(:user) }
+    given(:other_user) { create(:profile).user }
+
+    scenario 'is not allowed as a regular user' do
+      expect { profile_page.open(other_user.profile) }.to raise_error CanCan::AccessDenied
+    end
+
+    scenario 'is allowed as an admin' do
+      user.add_role :admin
+      expect { profile_page.open(other_user.profile) }.to_not raise_error
+    end
+  end
 end

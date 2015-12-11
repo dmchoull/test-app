@@ -1,4 +1,8 @@
 class ProfilePage < BasePage
+  def open(profile)
+    visit user_profile_path(profile.user, profile)
+  end
+
   def expect_displayed
     expect(page).to have_content 'My Profile'
   end
